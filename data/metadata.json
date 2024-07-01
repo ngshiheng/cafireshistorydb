@@ -1,0 +1,42 @@
+{
+    "title": "California Fires History",
+    "description": "Historical data of wildfires in California, sourced from CAL FIRE",
+    "about": "Made by jerrynsh.com",
+    "about_url": "https://jerrynsh.com/",
+    "license": "MIT",
+    "license_url": "https://github.com/ngshiheng/ca-fires-history-db/blob/main/LICENSE",
+    "source": "California Department of Forestry and Fire Protection (CAL FIRE)",
+    "source_url": "https://www.fire.ca.gov/incidents/",
+    "databases": {
+        "fires": {
+            "tables": {
+                "incidents": {
+                    "sort_desc": "Updated",
+                    "facets": ["County", "AdminUnit", "IsActive"]
+                }
+            },
+            "queries": {
+                "active_fires": {
+                    "sql": "SELECT * FROM incidents WHERE IsActive = 1 ORDER BY AcresBurned DESC",
+                    "title": "Currently Active Fires"
+                },
+                "largest_fires": {
+                    "sql": "SELECT * FROM incidents ORDER BY AcresBurned DESC LIMIT 10",
+                    "title": "10 Largest Fires by Acreage"
+                },
+                "fires_by_county": {
+                    "sql": "SELECT County, COUNT(*) as FireCount, SUM(AcresBurned) as TotalAcres FROM incidents GROUP BY County ORDER BY TotalAcres DESC",
+                    "title": "Fires by County"
+                },
+                "recent_fires": {
+                    "sql": "SELECT * FROM incidents ORDER BY Started DESC LIMIT 20",
+                    "title": "20 Most Recent Fires"
+                },
+                "least_contained": {
+                    "sql": "SELECT * FROM incidents WHERE IsActive = 1 ORDER BY PercentContained ASC LIMIT 10",
+                    "title": "10 Least Contained Active Fires"
+                }
+            }
+        }
+    }
+}
