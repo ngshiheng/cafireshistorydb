@@ -2,9 +2,9 @@ name: Scrape latest data
 
 on:
     push:
-    workflow_dispatch:
+    workflow_dispatch: # This allows us to trigger manually from the GitHub Actions UI
     schedule:
-        - cron: "6,26,46 * * * *" # At minute 6, 26, and 46
+        - cron: "6,26,46 * * * *" # Scheduled to run 3 times/hour (at minute 6, 26, and 46)
 
 jobs:
     scheduled:
@@ -13,27 +13,27 @@ jobs:
             - name: Check out this repo
               uses: actions/checkout@v4
 
-            - name: Install dependencies
-              run: |
-                  pipx install datasette
-
             - name: Set up python
               uses: actions/setup-python@v5
               with:
                   python-version: 3.11
 
+            # Step to get the latest artifact run ID
+            # Fetch the latest artifact run ID using GitHub API and jq
+            # Save the run ID as an environment variable
             - name: Get latest artifact run id
               run: |
                   ARTIFACT_RUN_ID=$(curl -s "https://api.github.com/repos/${{ github.repository }}/actions/artifacts?per_page=1" | jq '.artifacts[0].workflow_run.id')
                   echo "artifact_run_id=$ARTIFACT_RUN_ID" >> $GITHUB_ENV
 
+            # Download the artifact (our SQLite DB!) from the last run
             - name: Download artifact
               uses: actions/download-artifact@v4
               with:
                   name: ca-fires-history-db
                   path: ./data/
-                  run-id: ${{ env.artifact_run_id }}
-                  github-token: ${{ secrets.GH_PAT  }}
+                  run-id: ${{ env.artifact_run_id }} # Run ID of the artifact (SQLite DB) uploaded from the last run
+                  github-token: ${{ secrets.GH_PAT  }} # REQUIRED. See https://github.com/actions/download-artifact?tab=readme-ov-file#download-artifacts-from-other-workflow-runs-or-repositories
               continue-on-error: true
 
             - name: Display downloaded file
@@ -45,9 +45,13 @@ jobs:
             - name: Upload updated artifact
               uses: actions/upload-artifact@v4
               with:
-                  name: ca-fires-history-db
+                  name: ca-fires-history-db # Name of the artifact to upload, make sure to match the name in the download step
                   path: ./data/fires.db
                   if-no-files-found: error
+
+            - name: Install datasette
+              run: |
+                  pipx install datasette
 
             - name: Deploy to vercel
               env:
