@@ -36,7 +36,7 @@ with sqlite3.connect("data/fires.db") as conn:
     for item in data:
         cursor.execute(
             """
-            INSERT OR IGNORE INTO incidents (
+            INSERT OR REPLACE INTO incidents (
                 UniqueId, Name, Updated, Started, AdminUnit, County, Location,
                 AcresBurned, PercentContained, Longitude, Latitude, Url, IsActive
             )
