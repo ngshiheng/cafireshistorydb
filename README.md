@@ -25,7 +25,7 @@ graph TB
         end
     end
 
-    subgraph Web
+    subgraph CAL FIRE
         web[www.fire.ca.gov/incidents]
         class api Web;
     end
@@ -35,11 +35,6 @@ graph TB
     scraper --> |3. Upload| db
     scraper --> |4. Publish| deployment
     deployment --> |5. View/Access Data| client[User]
-
-
-    %% Apply dotted line styles
-    style GitHub stroke-dasharray: 5 5;
-    style Web stroke-dasharray: 5 5;
 ```
 
 ## Usage
