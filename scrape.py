@@ -4,7 +4,7 @@ import urllib.request
 
 url = "https://www.fire.ca.gov/api/sitecore/Incident/GetFiresForMap?showFeatured=false"
 headers = {
-    "User-Agent": "ca-fires-history-db (me@jerrynsh.com)",
+    "User-Agent": "cafireshistorydb (me@jerrynsh.com)",
 }
 
 print("Fetching data from API...")

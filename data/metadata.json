@@ -4,7 +4,7 @@
     "about": "Made by jerrynsh.com",
     "about_url": "https://jerrynsh.com/",
     "license": "MIT",
-    "license_url": "https://github.com/ngshiheng/ca-fires-history-db/blob/main/LICENSE",
+    "license_url": "https://github.com/ngshiheng/cafireshistorydb/blob/main/LICENSE",
     "source": "California Department of Forestry and Fire Protection (CAL FIRE)",
     "source_url": "https://www.fire.ca.gov/incidents/",
     "databases": {

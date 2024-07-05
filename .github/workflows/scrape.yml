@@ -59,4 +59,4 @@ jobs:
                   VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
               run: |-
                   datasette install datasette-publish-vercel
-                  datasette publish vercel data/fires.db  --project=ca-fires-history-db --install=datasette-hashed-urls --install=datasette-cluster-map --token="$VERCEL_TOKEN" --metadata data/metadata.json --setting allow_download off --setting allow_csv_stream off --extra-options "-i"
+                  datasette publish vercel data/fires.db  --project=cafireshistorydb --install=datasette-hashed-urls --install=datasette-cluster-map --token="$VERCEL_TOKEN" --metadata data/metadata.json --setting allow_download off --setting allow_csv_stream off --extra-options "-i"
