@@ -55,3 +55,11 @@ pip install datasette # optional: install Datasette if you haven't already
 
 datasette data/fires.db --metadata data/metadata.json
 ```
+
+## License
+
+This project is licensed under the [MIT License](./LICENSE).
+
+## Disclaimer
+
+This software is only used for research purposes, users must abide by the relevant laws and regulations of their location, please do not use it for illegal purposes. The user shall bear all the consequences caused by illegal use.
