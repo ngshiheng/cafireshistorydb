@@ -4,7 +4,7 @@ Tracking fire data from www.fire.ca.gov/incidents.
 
 This project is inspired by and adapts the work from [simonw/ca-fires-history](https://github.com/simonw/ca-fires-history). Instead of using [Git scraping](https://simonwillison.net/2020/Oct/9/git-scraping/), this project stores the data in a SQLite database and uses GitHub artifacts for storage.
 
-[Read more...]()
+[Read more...](https://jerrynsh.com/how-i-saved-scraped-data-in-an-sqlite-database-on-github/)
 
 ## How It Works
 
