@@ -1,0 +1,53 @@
+name: Merge database
+
+on:
+    workflow_dispatch:
+        inputs:
+            source_run_id:
+                description: "Run ID of the workflow containing the source SQLite artifact"
+                required: true
+                type: string
+            target_run_id:
+                description: "Run ID of the workflow containing the target SQLite artifact"
+                required: true
+                type: string
+
+jobs:
+    merge-sqlite:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Check out this repo
+              uses: actions/checkout@v4
+
+            - name: Set up python
+              uses: actions/setup-python@v5
+              with:
+                  python-version: 3.11
+
+            - name: Download source artifact
+              uses: actions/download-artifact@v4
+              with:
+                  name: ca-fires-history-db
+                  path: ./
+                  run-id: ${{ inputs.source_run_id }}
+                  github-token: ${{ secrets.GITHUB_TOKEN }}
+              continue-on-error: false
+
+            - name: Download target artifact
+              uses: actions/download-artifact@v4
+              with:
+                  name: ca-fires-history-db
+                  path: ./data/
+                  run-id: ${{ inputs.target_run_id }}
+                  github-token: ${{ secrets.GITHUB_TOKEN }}
+              continue-on-error: false
+
+            - name: Merge SQLite databases
+              run: python3 merge.py
+
+            - name: Reupload artifact
+              uses: actions/upload-artifact@v4
+              with:
+                  name: ca-fires-history-db
+                  path: ./data/fires.db
+                  if-no-files-found: error
