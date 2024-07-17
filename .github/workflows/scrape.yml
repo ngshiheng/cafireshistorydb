@@ -35,7 +35,7 @@ jobs:
                   path: ./data/
                   run-id: ${{ env.artifact_run_id }} # Run ID of the artifact (SQLite DB) uploaded from the last run
                   github-token: ${{ secrets.GH_PAT  }} # REQUIRED. See https://github.com/actions/download-artifact?tab=readme-ov-file#download-artifacts-from-other-workflow-runs-or-repositories
-              continue-on-error: true
+              continue-on-error: false
 
             - name: Display downloaded file
               run: ls data/
