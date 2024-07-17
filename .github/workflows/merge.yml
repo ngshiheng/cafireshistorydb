@@ -10,6 +10,7 @@ name: Merge sqlite
 #    - Retrieve the `workflow_run.id` from the list of artifacts. This ID corresponds to the workflow run that produced the SQLite artifact.
 
 on:
+    push:
     workflow_dispatch:
         inputs:
             source_run_id:
