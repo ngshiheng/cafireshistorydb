@@ -29,11 +29,11 @@ graph TB
         api[www.fire.ca.gov/incidents]
     end
 
-    db --> |1. Download| scraper
-    api --> |2. Fetch Data| scraper
-    scraper --> |3. Upload| db
-    scraper --> |4. Publish| deployment
-    deployment --> |5. View/Access Data| client[User]
+    db --> |1: Download| scraper
+    api --> |2: Fetch Data| scraper
+    scraper --> |3: Upload| db
+    scraper --> |4: Publish| deployment
+    deployment --> |5: View/Access Data| client[User]
 ```
 
 ## Usage
