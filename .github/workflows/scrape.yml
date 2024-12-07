@@ -2,6 +2,11 @@ name: Scrape latest data
 
 on:
     push:
+        branches:
+            - "main"
+        paths:
+            - "**.py"
+            - ".github/workflows/**"
     workflow_dispatch: # This allows us to trigger manually from the GitHub Actions UI
     schedule:
         - cron: "6,26,46 * * * *" # Scheduled to run 3 times/hour (at minute 6, 26, and 46)

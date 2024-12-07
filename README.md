@@ -26,7 +26,7 @@ graph TB
     end
 
     subgraph CAL FIRE
-        api[www\.fire\.ca.gov/incidents]
+        api[API]
     end
 
     db --> |1: Download| scraper
