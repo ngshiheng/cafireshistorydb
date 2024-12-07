@@ -12,7 +12,11 @@
             "tables": {
                 "incidents": {
                     "sort_desc": "Updated",
-                    "facets": ["County", "AdminUnit", "IsActive"]
+                    "facets": [
+                        "County",
+                        "AdminUnit",
+                        "IsActive"
+                    ]
                 }
             },
             "queries": {
@@ -37,6 +41,11 @@
                     "title": "10 Least Contained Active Fires"
                 }
             }
+        }
+    },
+    "plugins": {
+        "datasette-block-robots": {
+            "allow_only_index": true
         }
     }
 }
