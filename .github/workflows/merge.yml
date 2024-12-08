@@ -1,0 +1,63 @@
+name: Merge sqlite
+
+# This GitHub Actions workflow merges two SQLite databases manually to synchronize data that may have diverged.
+#
+# Usage:
+# 1. Trigger this workflow manually using the GitHub Actions workflow dispatch feature.
+# 2. Specify the run IDs of the workflows containing the source and target SQLite artifacts.
+#    To obtain the run IDs:
+#    - Use the GitHub API endpoint `https://api.github.com/repos/{owner}/{repo}/actions/artifacts?per_page=10`
+#    - Retrieve the `workflow_run.id` from the list of artifacts. This ID corresponds to the workflow run that produced the SQLite artifact.
+
+on:
+    push:
+    workflow_dispatch:
+        inputs:
+            source_run_id:
+                description: "Run ID of the workflow containing the source SQLite artifact"
+                required: true
+                type: string
+            target_run_id:
+                description: "Run ID of the workflow containing the target SQLite artifact"
+                required: true
+                type: string
+
+jobs:
+    merge-sqlite:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Check out this repo
+              uses: actions/checkout@v4
+
+            - name: Set up python
+              uses: actions/setup-python@v5
+              with:
+                  python-version: 3.11
+
+            - name: Download source artifact
+              uses: actions/download-artifact@v4
+              with:
+                  name: ca-fires-history-db
+                  path: ./
+                  run-id: ${{ inputs.source_run_id }}
+                  github-token: ${{ secrets.GITHUB_TOKEN }}
+              continue-on-error: false
+
+            - name: Download target artifact
+              uses: actions/download-artifact@v4
+              with:
+                  name: ca-fires-history-db
+                  path: ./data/
+                  run-id: ${{ inputs.target_run_id }}
+                  github-token: ${{ secrets.GITHUB_TOKEN }}
+              continue-on-error: false
+
+            - name: Merge SQLite databases
+              run: python3 merge.py
+
+            - name: Reupload artifact
+              uses: actions/upload-artifact@v4
+              with:
+                  name: ca-fires-history-db
+                  path: ./data/fires.db
+                  if-no-files-found: error
