@@ -34,4 +34,4 @@ docker-build:	## build datasette docker image.
 docker-datasette:	## run datasette container.
 	@if [ -z $(DOCKER) ]; then echo "Docker could not be found. See https://docs.docker.com/get-docker/"; exit 2; fi
 	docker stop cafireshistorydb || true && docker rm cafireshistorydb || true
-	docker run -p 8001:8001 --name cafireshistorydb ngshiheng/cafireshistorydb:latest
+	docker run --rm -p 8001:8001 --name cafireshistorydb ngshiheng/cafireshistorydb:latest
