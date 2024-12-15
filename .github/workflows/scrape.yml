@@ -46,7 +46,7 @@ jobs:
               run: ls data/
 
             - name: Run scrape.py
-              run: python3 scrape.py
+              run: make scrape
 
             - name: Upload updated artifact
               uses: actions/upload-artifact@v4
@@ -59,9 +59,14 @@ jobs:
               run: |
                   pipx install datasette
 
-            - name: Deploy to vercel
-              env:
-                  VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-              run: |-
-                  datasette install datasette-publish-vercel
-                  datasette publish vercel data/fires.db  --project=cafireshistorydb --install=datasette-hashed-urls --install=datasette-cluster-map --install=datasette-block-robots --token="$VERCEL_TOKEN" --metadata data/metadata.json --setting allow_download off --setting allow_csv_stream off --extra-options "-i"
+            - name: Login to Docker Hub
+              uses: docker/login-action@v3
+              with:
+                  username: ngshiheng
+                  password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+            - name: Build Docker image
+              run: make build
+
+            - name: Push Docker image
+              run: docker push ngshiheng/cafireshistorydb:latest
