@@ -125,5 +125,3 @@ jobs:
                     echo "Error in API response"
                     exit 1
                   fi
-
-                  echo "Successfully triggered redeployment with ID: $REDEPLOY_ID"
