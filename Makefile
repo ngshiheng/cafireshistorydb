@@ -40,7 +40,7 @@ docker-datasette:	## run datasette container.
 	docker run --rm -p 8001:8001 --name cafireshistorydb $(IMAGE_NAME):latest
 
 .PHONY: docker-push
-docker-push:	## build and push docker images to registry
+docker-push:	## build and push docker images to registry.
 	@if [ -z $(DOCKER) ]; then echo "Docker could not be found. See https://docs.docker.com/get-docker/"; exit 2; fi
 	docker push $(IMAGE_NAME):$(TAG_DATE)
 	docker push $(IMAGE_NAME):latest
