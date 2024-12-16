@@ -88,7 +88,7 @@ jobs:
                     -H "User-Agent: GitHub-Actions" \
                     --url https://backboard.railway.app/graphql/v2 \
                     -d '{
-                      "query": "query deployments { deployments(last: 1, input: { projectId: \"${{ secrets.RAILWAY_PROJECT_ID }}\", environmentId: \"${{ secrets.RAILWAY_ENV_ID }}\", serviceId: \"${{ secrets.RAILWAY_SERVICE_ID }}\", status: { in: [SUCCESS] } }) { edges { node { id status } } } }",
+                      "query": "query deployments { deployments(last: 1, input: { projectId: \"${{ secrets.RAILWAY_PROJECT_ID }}\", environmentId: \"${{ secrets.RAILWAY_ENV_ID }}\", serviceId: \"${{ secrets.RAILWAY_SERVICE_ID }}\", status: { in: [SUCCESS, SLEEPING] } }) { edges { node { id status } } } }",
                       "operationName": "deployments"
                     }')
 
