@@ -10,9 +10,9 @@ This project is inspired by and adapts the work from [simonw/ca-fires-history](h
 
 ```mermaid
 graph TB
-	subgraph Vercel
+	subgraph Railway
         deployment[Datasette]
-        class deployment vercel;
+        class deployment Railway;
     end
 
     subgraph GitHub
