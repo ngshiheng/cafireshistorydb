@@ -78,15 +78,25 @@ jobs:
             - name: Check out this repo
               uses: actions/checkout@v4
 
-            - name: Set up Node.js
-              uses: actions/setup-node@v4
-              with:
-                  node-version: "20"
+            - name: Get Latest Deployment ID
+              id: get-deployment
+              run: |
+                  DEPLOYMENT_ID=$(curl -X POST \
+                    -H "Content-Type: application/json" \
+                    -H "Authorization: Bearer ${{ secrets.RAILWAY_TOKEN }}" \
+                    -d '{
+                      "query": "query deployments { deployments(last: 1, input: { serviceId: \"${{ secrets.RAILWAY_SERVICE_ID }}\", status: { in: [SUCCESS] } }) { edges { node { id status } } } }"
+                    }' \
+                    https://backboard.railway.com/graphql/v2 | \
+                    jq -r '.data.deployments.edges[0].node.id')
+                  echo "deployment_id=$DEPLOYMENT_ID" >> $GITHUB_OUTPUT
 
-            - name: Install Railway CLI
-              run: npm install -g @railway/cli
-
-            - name: Deploy to Railway
-              env:
-                  RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-              run: railway up --service=${{ secrets.RAILWAY_SERVICE_ID }}
+            - name: Trigger Redeployment
+              run: |
+                  curl -X POST \
+                    -H "Content-Type: application/json" \
+                    -H "Authorization: Bearer ${{ secrets.RAILWAY_TOKEN }}" \
+                    -d '{
+                      "query": "mutation { deploymentRedeploy(id: \"${{ steps.get-deployment.outputs.deployment_id }}\", usePreviousImageTag: true) { id status } }"
+                    }' \
+                    https://backboard.railway.com/graphql/v2
