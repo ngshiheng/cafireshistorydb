@@ -10,11 +10,9 @@ This project is inspired by and adapts the work from [simonw/ca-fires-history](h
 
 ```mermaid
 graph TB
-	subgraph Railway
+    subgraph Railway
         deployment[Datasette]
-        class deployment Railway;
     end
-
     subgraph GitHub
         subgraph Actions
             scraper[scrape.py]
@@ -24,16 +22,18 @@ graph TB
             class db artifacts;
         end
     end
-
     subgraph CAL FIRE
         api[API]
     end
-
+    subgraph DockerHub
+        dockerhub[Docker Hub]
+    end
     db --> |1: Download| scraper
     api --> |2: Fetch Data| scraper
     scraper --> |3: Upload| db
-    scraper --> |4: Publish| deployment
-    deployment --> |5: View/Access Data| client[User]
+    scraper --> |4: Publish to Docker Hub| dockerhub
+    dockerhub --> |5: Pull Image and Deploy| deployment
+    deployment --> |6: View/Access Data| client[User]
 ```
 
 ## Usage
