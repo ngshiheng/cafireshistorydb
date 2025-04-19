@@ -10,8 +10,8 @@ help:	## display this help message.
 	@awk 'BEGIN {FS = ":.*##"; printf "Use make \033[36m<target>\033[0m where \033[36m<target>\033[0m is one of:\n"} /^[a-zA-Z_-]+:.*?##/ { printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)
 
 ##@ Usage
-.PHONY: scrape
-scrape:	## run scraper.
+.PHONY: run
+run:	## run scraper.
 	@python scrape.py
 
 .PHONY: datasette
@@ -40,7 +40,7 @@ docker-datasette:	## run datasette container.
 	docker run --rm -p 8001:8001 --name cafireshistorydb $(IMAGE_NAME):latest
 
 .PHONY: docker-push
-docker-push:	## build and push docker images to registry.
+docker-push:	## build and push docker image to registry.
 	@if [ -z $(DOCKER) ]; then echo "Docker could not be found. See https://docs.docker.com/get-docker/"; exit 2; fi
 	docker push $(IMAGE_NAME):$(TAG_DATE)
 	docker push $(IMAGE_NAME):latest

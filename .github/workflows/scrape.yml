@@ -47,7 +47,7 @@ jobs:
               run: ls data/
 
             - name: Run scrape.py
-              run: make scrape
+              run: make run
 
             - name: Upload updated artifact
               uses: actions/upload-artifact@v4
