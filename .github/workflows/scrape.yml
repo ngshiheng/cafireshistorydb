@@ -10,7 +10,7 @@ on:
             - Makefile
     workflow_dispatch:
     schedule:
-        - cron: "6,26,46 * * * *" # Scheduled to run 3 times/hour (at minute 6, 26, and 46)
+        - cron: "0 * * * *" # Scheduled to run every hour
 
 jobs:
     scrape-and-build:
