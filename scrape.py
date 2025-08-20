@@ -2,71 +2,77 @@ import json
 import sqlite3
 import urllib.request
 
-url = "https://www.fire.ca.gov/api/sitecore/Incident/GetFiresForMap?showFeatured=false"
-headers = {
-    "User-Agent": "cafireshistorydb (me@jerrynsh.com)",
-}
 
-print("Fetching data from API...")
-req = urllib.request.Request(url, headers=headers)
-with urllib.request.urlopen(req) as response:
-    json_data = response.read().decode("utf-8")
+def main():
+    url = "https://www.fire.ca.gov/api/sitecore/Incident/GetFiresForMap?showFeatured=false"
+    headers = {
+        "User-Agent": "cafireshistorydb (me@jerrynsh.com)",
+    }
 
-data = json.loads(json_data)
-print(f"Received data for {len(data)} fire incidents")
+    print("Fetching data from API...")
+    req = urllib.request.Request(url, headers=headers)
+    with urllib.request.urlopen(req) as response:
+        json_data = response.read().decode("utf-8")
 
-with sqlite3.connect("data/fires.db") as conn:
-    cursor = conn.cursor()
+    data = json.loads(json_data)
+    print(f"Received data for {len(data)} fire incidents")
 
-    print("Creating incidents table if it doesn't exist")
-    cursor.execute("""
-    CREATE TABLE IF NOT EXISTS incidents (
-        UniqueId TEXT PRIMARY KEY,
-        Name TEXT,
-        Updated TEXT,
-        Started TEXT,
-        AdminUnit TEXT,
-        County TEXT,
-        Location TEXT,
-        AcresBurned REAL,
-        PercentContained REAL,
-        Longitude REAL,
-        Latitude REAL,
-        Url TEXT,
-        IsActive INTEGER
-    )
-    """)
+    with sqlite3.connect("data/fires.db") as conn:
+        cursor = conn.cursor()
 
-    new_or_updated_count = 0
-    for item in data:
-        cursor.execute(
-            """
-            INSERT OR REPLACE INTO incidents (
-                UniqueId, Name, Updated, Started, AdminUnit, County, Location,
-                AcresBurned, PercentContained, Longitude, Latitude, Url, IsActive
-            )
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            """,
-            (
-                item["UniqueId"],
-                item["Name"],
-                item["Updated"],
-                item["Started"],
-                item["AdminUnit"],
-                item["County"],
-                item["Location"],
-                item["AcresBurned"],
-                item["PercentContained"],
-                item["Longitude"],
-                item["Latitude"],
-                item["Url"],
-                1 if item["IsActive"] else 0,
-            ),
+        print("Creating incidents table if it doesn't exist")
+        cursor.execute("""
+        CREATE TABLE IF NOT EXISTS incidents (
+            UniqueId TEXT PRIMARY KEY,
+            Name TEXT,
+            Updated TEXT,
+            Started TEXT,
+            AdminUnit TEXT,
+            County TEXT,
+            Location TEXT,
+            AcresBurned REAL,
+            PercentContained REAL,
+            Longitude REAL,
+            Latitude REAL,
+            Url TEXT,
+            IsActive INTEGER
         )
-        if cursor.rowcount > 0:
-            new_or_updated_count += 1
-            print(f"Inserted or updated: {item['Name']} (ID: {item['UniqueId']})")
+        """)
 
-    print(f"Total rows inserted or updated: {new_or_updated_count}")
+        new_or_updated_count = 0
+        for item in data:
+            cursor.execute(
+                """
+                INSERT OR REPLACE INTO incidents (
+                    UniqueId, Name, Updated, Started, AdminUnit, County, Location,
+                    AcresBurned, PercentContained, Longitude, Latitude, Url, IsActive
+                )
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """,
+                (
+                    item["UniqueId"],
+                    item["Name"],
+                    item["Updated"],
+                    item["Started"],
+                    item["AdminUnit"],
+                    item["County"],
+                    item["Location"],
+                    item["AcresBurned"],
+                    item["PercentContained"],
+                    item["Longitude"],
+                    item["Latitude"],
+                    item["Url"],
+                    1 if item["IsActive"] else 0,
+                ),
+            )
+            if cursor.rowcount > 0:
+                new_or_updated_count += 1
+                print(f"Inserted or updated: {item['Name']} (ID: {item['UniqueId']})")
 
-print("Operation completed")
+        print(f"Total rows inserted or updated: {new_or_updated_count}")
+
+    print("Operation completed")
+
+
+if __name__ == "__main__":
+    main()
